@@ -1,0 +1,200 @@
+Drop Type AdresseTyp Force;
+Drop Type PostTyp Force;
+Drop Type EmailTyp Force;
+Drop Type PersonenTyp Force;
+Drop Type AdresseListTyp Force;
+
+create type AdresseTyp as Object
+(
+Bezeichnung varchar(30)
+)Not Final
+/
+create type PostTyp under AdresseTyp
+(
+Strasse varchar(30),
+Hausnummer int,
+PLZ int,
+Ort varchar(30)
+)
+/
+create type EmailTyp under AdresseTyp
+(
+email varchar(50)
+)
+/
+create type PersonenTyp as object
+(
+PersonID int,
+Vorname varchar(30),
+Nachname varchar(30),
+Funktion varchar(30)
+)
+/
+create type AdresseListTyp as table of ref AdresseTyp;
+/
+Alter type PersonenTyp
+add Attribute Adressen AdresseListTyp Cascade;
+/
+Drop table Personen;
+Drop table Post;
+Drop table Email;
+create table Personen of PersonenTyp
+(
+PersonID Primary Key
+)Nested Table Adressen Store as Adressen_TAB;
+
+Insert into PERSONEN VALUES(1,'Dang','Trinh','Vorstand',ADRESSEN((PostTyp('Post','Emi','14','44263','Dortmund')));
+Insert into PERSONEN VALUES (1,'Dang','Trinh','Vorstand',ADRESSENTYP(PostTyp('Post','Emi','14','44263','Dortmund'),EmailTyp('Email','dang@gmail.com'))));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Drop Type AdresseTyp Force;
+Drop Type PostTyp Force;
+Drop Type EmailTyp Force;
+Drop Type PersonenTyp Force;
+Drop Type AdressenTyp Force;
+
+create type AdresseTyp as Object
+(
+Bezeichnung varchar(30)
+)Not Final
+/
+create type PostTyp under AdresseTyp
+(
+Strasse varchar(30),
+Hausnummer int,
+PLZ int,
+Ort varchar(30)
+)
+/
+create type EmailTyp under AdresseTyp
+(
+email varchar(50)
+)
+/
+create type PersonenTyp as object
+(
+PersonID int,
+Vorname varchar(30),
+Nachname varchar(30),
+Funktion varchar(30)
+)
+/
+create type AdressenListTyp as table of AdresseTYP
+/
+create type EmailListTyp as table of EmailTyp
+/
+create type PostListTyp as Table of PostTyp
+/
+Alter type PersonenTyp
+add Attribute AdressenTypP AdressenTYP Cascade;
+
+
+Drop table Personen;
+create table Personen of PersonenTyp
+(
+PersonID Primary Key
+)Nested Table AdressenTypP STORE AS A_TAB ((PRIMARY KEY (Bezeichnung)));
+
+Insert into PERSONEN VALUES (1,'Dang','Trinh','Vorstand',ADRESSENTYP(AdresseTyp('Post')));
+select p.*,a.*,TREAT(value(a) as EmailTyp).email from PERSONEN p, Table(p.ADRESSENTYPP) a;
+Insert into PERSONEN VALUES (5,'Dang','Trinh','Vorstand',ADRESSENTYP(EmailTyp('Email','asa')));
+Insert into PERSONEN VALUES (4,'Dang','Trinh','Vorstand',ADRESSENTYP(PostTyp('Pst','Emi','14','44263','Dortmund'),EmailTyp('Emil','dang@gmail.com')));
+
+Insert into PERSONEN VALUES (1,'Dang','Trinh','Vorstand',ADRESSENTYP(AdresseTyp(1,'Post')));
+select p.*,a.*,TREAT(value(a) as EmailTyp).email from PERSONEN p, Table(p.ADRESSENTYPP) a;
+Insert into PERSONEN VALUES (5,'Dang','Trinh','Vorstand',ADRESSENTYP(EmailTyp('Email','asa')));
+Insert into PERSONEN VALUES (4,'Dang','Trinh','Vorstand',ADRESSENTYP(PostTyp('Pst','Emi','14','44263','Dortmund'),EmailTyp('Emil','dang@gmail.com')));
+
+select p.*,a.*,TREAT(value(a) as EmailTyp).email as Email, TREAT(value(a) as PostTyp).strasse as Strasse, TREAT(value(a) as PostTyp).Hausnummer as Hausnummer, TREAT(value(a) as PostTyp).Ort as Ort, TREAT(value(a) as PostTyp).plz as PLZ from PERSONEN p, Table(p.ADRESSENTYPP) a;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Drop Type AdresseTyp Force;
+Drop Type PostTyp Force;
+Drop Type EmailTyp Force;
+Drop Type PersonenTyp Force;
+Drop Type AdressenTyp Force;
+
+create type AdresseTyp as Object
+(
+pid INT,
+Bezeichnung varchar(30)
+)Not Final
+/
+create type PostTyp under AdresseTyp
+(
+Strasse varchar(30),
+Hausnummer int,
+PLZ int,
+Ort varchar(30)
+)
+/
+create type EmailTyp under AdresseTyp
+(
+email varchar(50)
+)
+/
+create type PersonenTyp as object
+(
+PersonID int,
+Vorname varchar(30),
+Nachname varchar(30),
+Funktion varchar(30)
+)
+/
+create type AdressenTyp as table of AdresseTYP
+/
+Alter type PersonenTyp
+add Attribute AdressenTypP AdressenTYP Cascade;
+
+
+Drop table Personen;
+create table Personen of PersonenTyp
+(
+PersonID Primary Key
+)Nested Table AdressenTypP STORE AS A_TAB ((PRIMARY KEY (pid,Bezeichnung)));
+
+Insert into PERSONEN VALUES (1,'Dang','Trinh','Vorstand',ADRESSENTYP(PostTyp(1,'Post','Emi','14','44263','Dortmund'),EmailTyp(1,'Email','dang@gmail.com')));
+Insert into PERSONEN VALUES (2,'David','Beck','Trainer',ADRESSENTYP(PostTyp(2,'Post','Herrman','15','44139','Dortmund'),EmailTyp(2,'Email','davidBeck@gmail.com')));
+select p.*,a.*,TREAT(value(a) as EmailTyp).email as Email from PERSONEN p, Table(p.ADRESSENTYPP) a where a.Bezeichnung like 'Post';
+select p.personid,p.VORNAME,p.nachname,p.funktion,TREAT(value(a) as EmailTyp).email as Email, TREAT(value(a) as PostTyp).strasse as Strasse, TREAT(value(a) as PostTyp).Hausnummer as Hausnummer, TREAT(value(a) as PostTyp).Ort as Ort, TREAT(value(a) as PostTyp).plz as PLZ from PERSONEN p, Table(p.ADRESSENTYPP) a;
+select p.personid,p.VORNAME,p.nachname,p.funktion,TREAT(value(a) as EmailTyp).email as Email from PERSONEN p, Table(p.ADRESSENTYPP) a where a.Bezeichnung like 'Email';
+select p.personid,p.VORNAME,p.nachname,p.funktion,TREAT(value(a) as PostTyp).strasse as Strasse, TREAT(value(a) as PostTyp).Hausnummer as Hausnummer, TREAT(value(a) as PostTyp).Ort as Ort, TREAT(value(a) as PostTyp).plz as PLZ from PERSONEN p, Table(p.ADRESSENTYPP) a where a.Bezeichnung like 'Post';
